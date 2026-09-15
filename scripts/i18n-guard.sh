@@ -4,7 +4,7 @@
 # What it checks: the set of CJK (Hangul + Han) lines surviving in the tree must exactly
 # equal scripts/i18n-allowlist.txt. That allowlist is the expected-survivor snapshot from
 # the migration, and it legitimately contains TWO kinds of Korean:
-#   1. runtime i18n strings — the `.ko` / `ko:` branches of app/Sources/StickyCastCore/L10n.swift
+#   1. runtime i18n strings — the `.ko` / `ko:` branches of app/Sources/PostMDCore/L10n.swift
 #      and extension/src/i18n.ts (the Korean half of every user-facing string), and
 #   2. category-C test data — Korean values passed to code under test, expected values, and
 #      fixture `input` fields that verify multibyte/NFC/NFD/byte-boundary + roundtrip handling.

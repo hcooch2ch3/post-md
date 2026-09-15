@@ -1,7 +1,7 @@
 import XCTest
 import AppKit
 import SwiftUI
-@testable import StickyCastCore
+@testable import PostMDCore
 
 /// Covers the dispatch path itself, not just the key matcher. Every earlier defect in this logic
 /// shipped because only the pure matcher was reachable from tests.

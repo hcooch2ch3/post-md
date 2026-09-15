@@ -2,7 +2,7 @@
 
 `encoding.ts` and `limits.ts` are BYTE-IDENTICAL copies of `extension/src/*`.
 They encode the `sticky://` URL contract shared with the macOS app's Swift decoder
-(`app/Sources/StickyCastCore/StickyURLParser.swift`).
+(`app/Sources/PostMDCore/StickyURLParser.swift`).
 
 Do NOT edit them — not even comments (the `// extension/src/limits.ts:` header stays
 verbatim). Any change breaks byte-identity and fails `extension/test/obsidian-drift.test.ts`.

@@ -1,5 +1,5 @@
 import XCTest
-@testable import StickyCastCore
+@testable import PostMDCore
 
 final class L10nTests: XCTestCase {
     private static let suiteName = "test.stickycast.l10n"

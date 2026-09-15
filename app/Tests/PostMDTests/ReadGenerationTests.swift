@@ -1,5 +1,5 @@
 import XCTest
-@testable import StickyCastCore
+@testable import PostMDCore
 
 /// Regression: discard out-of-order completions of async file reads with latest-wins,
 /// so a sticker cannot get stuck lagging behind the file.

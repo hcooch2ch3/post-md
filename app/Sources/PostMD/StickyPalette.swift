@@ -1,5 +1,5 @@
 import SwiftUI
-import StickyCastCore
+import PostMDCore
 
 /// Sticky-note preset color palette. Persisted as the rawValue key (String); the actual Color mapping lives here (app side).
 /// StickyNote.color holds this key; nil means the default background (windowBackgroundColor).

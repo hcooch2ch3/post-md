@@ -1,7 +1,7 @@
 import AppKit
 import UserNotifications
 import UniformTypeIdentifiers
-import StickyCastCore
+import PostMDCore
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private(set) var store: StickyStore!

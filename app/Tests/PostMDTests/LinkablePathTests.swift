@@ -1,5 +1,5 @@
 import XCTest
-@testable import StickyCastCore
+@testable import PostMDCore
 
 final class LinkablePathTests: XCTestCase {
     private func tempFile(ext: String, name: String = "note") -> String {

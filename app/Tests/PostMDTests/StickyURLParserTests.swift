@@ -1,5 +1,5 @@
 import XCTest
-@testable import StickyCastCore
+@testable import PostMDCore
 
 final class StickyURLParserTests: XCTestCase {
     // Shared golden vectors, all 3 (now wrapped in the action enum)

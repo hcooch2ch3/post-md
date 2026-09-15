@@ -1,4 +1,4 @@
-// StickyCastCore: target anchor
+// PostMDCore: target anchor
 
 import Foundation
 

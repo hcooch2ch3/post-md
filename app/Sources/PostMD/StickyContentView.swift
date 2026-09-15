@@ -1,6 +1,6 @@
 import SwiftUI
 import MarkdownUI
-import StickyCastCore
+import PostMDCore
 
 struct StickyContentView: View {
     @ObservedObject var vm: StickyViewModel     // reactive content, banner, edit state

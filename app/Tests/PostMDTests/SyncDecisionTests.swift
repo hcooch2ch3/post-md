@@ -1,5 +1,5 @@
 import XCTest
-@testable import StickyCastCore
+@testable import PostMDCore
 
 final class SyncDecisionTests: XCTestCase {
     func testNilSyncedHashIgnores() {

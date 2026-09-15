@@ -1,5 +1,5 @@
 import AppKit
-import StickyCastCore
+import PostMDCore
 
 /// The standard text-editing commands: the Edit menu that carries them, and the dispatch that
 /// actually fires them inside a sticker.

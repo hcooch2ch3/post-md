@@ -3,7 +3,7 @@ import fixturesRoot from "../../fixtures/roundtrip.json";
 import { toBase64URL, buildStickyURL, URL_PREFIX } from "../src/encoding";
 
 // One machine-generated source (fixtures/roundtrip.json) is shared by both the extension and app tests.
-// The app-side counterpart: app/Tests/StickyCastTests/CrossComponentTests.swift (reads the same file and verifies the parser restores it).
+// The app-side counterpart: app/Tests/PostMDTests/CrossComponentTests.swift (reads the same file and verifies the parser restores it).
 interface Fixture { input: string; encoded: string; note?: string; }
 const fixtures = (fixturesRoot as { fixtures: Fixture[] }).fixtures;
 

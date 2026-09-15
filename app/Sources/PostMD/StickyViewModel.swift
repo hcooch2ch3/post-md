@@ -1,5 +1,5 @@
 import SwiftUI
-import StickyCastCore
+import PostMDCore
 
 /// conflict banner state. (Live Sync)
 enum SyncBanner: Equatable { case conflict }

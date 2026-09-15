@@ -1,5 +1,5 @@
 import XCTest
-@testable import StickyCastCore
+@testable import PostMDCore
 
 /// The scan decides which stickers get protected while macOS hands the front app back after a
 /// Mission Control selection. Over-collecting raises a sticker the user never asked to see;

@@ -1,5 +1,5 @@
 import AppKit
-import StickyCastCore
+import PostMDCore
 
 /// Keeps a Mission Control raise from being undone.
 ///

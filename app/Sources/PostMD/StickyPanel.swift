@@ -1,5 +1,5 @@
 import AppKit
-import StickyCastCore
+import PostMDCore
 
 final class StickyPanel: NSPanel {
     init(frame: NSRect) {

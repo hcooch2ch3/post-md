@@ -1,5 +1,5 @@
 import XCTest
-@testable import StickyCastCore
+@testable import PostMDCore
 
 final class FileWatcherTests: XCTestCase {
     func testDetectsInPlaceWriteAndReArmsAfterAtomicSave() {

@@ -8,7 +8,7 @@ swift build -c release
 APP="build/StickyCast.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS"
-cp ".build/release/StickyCast" "$APP/Contents/MacOS/StickyCast"
+cp ".build/release/PostMD" "$APP/Contents/MacOS/StickyCast"
 cp Info.plist "$APP/Contents/"
 codesign --force --sign - "$APP"
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$APP"

@@ -1,6 +1,6 @@
 import AppKit
 import SwiftUI
-import StickyCastCore
+import PostMDCore
 
 /// Lifecycle of one sticky window. Resizes commit in windowDidEndLiveResize; moves commit via a debounce.
 /// Threading contract: main-thread only (same as StickyStore: UI callbacks and URL handlers all run on main).

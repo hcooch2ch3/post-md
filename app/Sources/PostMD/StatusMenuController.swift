@@ -1,5 +1,5 @@
 import AppKit
-import StickyCastCore
+import PostMDCore
 
 /// menu-bar icon: the only always-on entry point for an LSUIElement app
 final class StatusMenuController: NSObject, NSMenuDelegate {
