@@ -493,12 +493,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusMenu?.indicateError()  // fallback: even if the notification isn't visible, flag it via the menu bar icon badge
     }
 
-    /// Self-check that this app is the sticky:// handler. Compare by bundleIdentifier (robust against symlinks),
+    /// Self-check that this app is the post-md:// handler. Compare by bundleIdentifier (robust against symlinks),
     /// treat nil (handler unregistered) as an error too, and only run in a .app bundle (avoids a swift run false positive).
     /// Checks once at app launch (not per URL), which also catches handler hijacking on a later launch.
     private func verifySchemeHandler() {
         guard Bundle.main.bundleURL.pathExtension == "app",
-              let probe = URL(string: "sticky://new") else { return }
+              let probe = URL(string: "post-md://new") else { return }
         let myID = Bundle.main.bundleIdentifier
         guard let handlerURL = NSWorkspace.shared.urlForApplication(toOpen: probe) else {
             reportError(L10n.handlerNotRegistered())

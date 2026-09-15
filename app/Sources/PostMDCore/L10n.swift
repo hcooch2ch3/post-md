@@ -194,17 +194,17 @@ public enum L10n {
     }
     public static func handlerNotRegistered(_ l: Language = current) -> String {
         switch l {
-        case .en: return "The sticky:// handler isn't registered, so popping stickers won't work — please reinstall the app."
-        case .ko: return "sticky:// 핸들러가 등록되지 않았습니다. 스티커 발사가 동작하지 않습니다 — 앱을 다시 설치해 주세요."
+        case .en: return "The post-md:// handler isn't registered, so popping stickers won't work — please reinstall the app."
+        case .ko: return "post-md:// 핸들러가 등록되지 않았습니다. 스티커 발사가 동작하지 않습니다 — 앱을 다시 설치해 주세요."
         }
     }
     public static func handlerNotThisApp(_ name: String, _ l: Language = current) -> String {
         switch l {
-        case .en: return "The sticky:// handler isn't this app (current: \(name)). Please reinstall the app."
-        case .ko: return "sticky:// 핸들러가 이 앱이 아닙니다 (현재: \(name)). 앱을 다시 설치해 주세요."
+        case .en: return "The post-md:// handler isn't this app (current: \(name)). Please reinstall the app."
+        case .ko: return "post-md:// 핸들러가 이 앱이 아닙니다 (현재: \(name)). 앱을 다시 설치해 주세요."
         }
     }
-    // URLError enum (verb-generic: sticky:// now has both new?content= and open?path=)
+    // URLError enum (verb-generic: post-md:// now has both new?content= and open?path=)
     public static func urlUnknownHost(_ l: Language = current) -> String { switch l { case .en: "Unsupported request."; case .ko: "지원하지 않는 요청입니다." } }
     public static func urlMissingContent(_ l: Language = current) -> String { switch l { case .en: "The request is missing its value."; case .ko: "요청에 값이 없습니다." } }
     public static func urlInvalidEncoding(_ l: Language = current) -> String { switch l { case .en: "Couldn't decode the request (encoding error)."; case .ko: "요청을 해석할 수 없습니다 (인코딩 오류)." } }

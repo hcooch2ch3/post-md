@@ -40,7 +40,7 @@ describe("buildOpenURL", () => {
     expect(buildOpenURL(p)).toBe(OPEN_URL_PREFIX + toBase64URL(p));
   });
   it("uses a distinct verb from the snapshot prefix", () => {
-    expect(OPEN_URL_PREFIX).toBe("sticky://open?path=");
+    expect(OPEN_URL_PREFIX).toBe("post-md://open?path=");
     expect(OPEN_URL_PREFIX).not.toBe(URL_PREFIX);
   });
   it("round-trips spaces and slashes through base64url (no raw path in the URL)", () => {

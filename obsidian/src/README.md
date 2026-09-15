@@ -1,7 +1,7 @@
 # obsidian/src
 
 `encoding.ts` and `limits.ts` are BYTE-IDENTICAL copies of `extension/src/*`.
-They encode the `sticky://` URL contract shared with the macOS app's Swift decoder
+They encode the `post-md://` URL contract shared with the macOS app's Swift decoder
 (`app/Sources/PostMDCore/StickyURLParser.swift`).
 
 Do NOT edit them — not even comments (the `// extension/src/limits.ts:` header stays

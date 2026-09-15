@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleIdentifier</key><string>dev.seongmin.stickycast</string>
+    <key>CFBundleIdentifier</key><string>dev.seongmin.post-md</string>
     <key>CFBundleName</key><string>StickyCast</string>
     <key>CFBundleDevelopmentRegion</key><string>en</string>
     <key>CFBundleLocalizations</key>
@@ -19,8 +19,8 @@
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
-            <key>CFBundleURLName</key><string>dev.seongmin.stickycast.scheme</string>
-            <key>CFBundleURLSchemes</key><array><string>sticky</string></array>
+            <key>CFBundleURLName</key><string>dev.seongmin.post-md.scheme</string>
+            <key>CFBundleURLSchemes</key><array><string>post-md</string></array>
         </dict>
     </array>
 </dict>

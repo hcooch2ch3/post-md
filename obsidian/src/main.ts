@@ -5,7 +5,7 @@ import { deriveContent } from "./derive";
 
 const MAX_MB = Math.round(MAX_CONTENT_BYTES / (1024 * 1024));
 
-// We launch the sticky:// URL through Electron's shell rather than window.location: Obsidian
+// We launch the post-md:// URL through Electron's shell rather than window.location: Obsidian
 // intercepts in-page scheme navigations, and there is no first-party API to fire a custom
 // external scheme. Guarded so a renderer without node integration degrades to a Notice.
 function electronShell(): { openExternal(url: string): Promise<void> } | null {

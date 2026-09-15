@@ -1,6 +1,6 @@
 // preflight/test-length.js: measure the URL length limit (target: total encoded URL length)
 const fire = (urlLen) => {
-  const prefix = "sticky://new?content=";
+  const prefix = "post-md://new?content=";
   const payload = "A".repeat(urlLen - prefix.length); // 'A' is a valid base64url character
   window.location.href = prefix + payload;
 };

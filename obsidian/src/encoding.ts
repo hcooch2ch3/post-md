@@ -1,5 +1,5 @@
-// sticky:// content encoding
-export const URL_PREFIX = "sticky://new?content=";
+// post-md:// content encoding
+export const URL_PREFIX = "post-md://new?content=";
 
 function bytesToBase64URL(bytes: Uint8Array): string {
   let binary = "";
@@ -24,7 +24,7 @@ export function buildStickyURL(content: string, maxContentBytes: number): string
   return URL_PREFIX + bytesToBase64URL(bytes);
 }
 
-export const OPEN_URL_PREFIX = "sticky://open?path=";
+export const OPEN_URL_PREFIX = "post-md://open?path=";
 
 /**
  * Build a link URL that tells the app to OPEN (and stay synced to) an on-disk file, rather than

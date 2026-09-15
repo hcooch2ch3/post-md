@@ -1,18 +1,18 @@
 import Foundation
 
 public enum StickyURLError: Error, Equatable {
-    case unknownHost      // scheme != "sticky" / unknown host / non-empty path / fragment / parse failure
+    case unknownHost      // scheme != "post-md" / unknown host / non-empty path / fragment / parse failure
     case missingContent   // required query param (content|path) absent / empty / duplicate
     case invalidEncoding  // base64url or UTF-8 decode failure, or a non-absolute open path
 }
 
-/// The action a sticky:// URL requests.
+/// The action a post-md:// URL requests.
 public enum StickyURLAction: Equatable {
-    case new(content: String)   // sticky://new?content=<base64url> — detached snapshot
-    case open(path: String)     // sticky://open?path=<base64url abs path> — file-linked sticker
+    case new(content: String)   // post-md://new?content=<base64url> — detached snapshot
+    case open(path: String)     // post-md://open?path=<base64url abs path> — file-linked sticker
 }
 
-/// sticky:// URL parser. Pure logic, no AppKit.
+/// post-md:// URL parser. Pure logic, no AppKit.
 /// Note: the raw URL length limit (receiver-side oversize) is decided by the AppDelegate that receives the URL, not this parser.
 public enum StickyURLParser {
     // base64url (unpadded), whole-string anchored. NSRegularExpression's $ allows a trailing \n, so \z is used.
@@ -22,8 +22,8 @@ public enum StickyURLParser {
         guard let comps = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return .failure(.unknownHost)  // collapse a parse failure into unknownHost (observed behavior matches the contract)
         }
-        // scheme: lowercase "sticky" only. URLComponents doesn't lowercase custom-scheme host/scheme, so compare explicitly.
-        guard comps.scheme == "sticky" else { return .failure(.unknownHost) }
+        // scheme: lowercase "post-md" only. URLComponents doesn't lowercase custom-scheme host/scheme, so compare explicitly.
+        guard comps.scheme == "post-md" else { return .failure(.unknownHost) }
         // path: only empty or "/" (a trailing slash) allowed
         guard comps.path.isEmpty || comps.path == "/" else { return .failure(.unknownHost) }
         // fragment: not allowed

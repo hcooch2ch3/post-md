@@ -1,7 +1,7 @@
 // preflight/test-length-auto.js: automated URL-length measurement, fires each size in sequence on editor load
 // Note: remove from scripts/ once measured (it fires every time the editor opens)
 const fire = (urlLen) => {
-  const prefix = "sticky://new?content=";
+  const prefix = "post-md://new?content=";
   const payload = "A".repeat(urlLen - prefix.length);
   window.location.href = prefix + payload;
 };

@@ -21,8 +21,8 @@
         _ = try! store.add(content: "독립").get()
         case .ko: return "'\(fileName)'을(를) 스티커 내용으로 덮어쓰면 외부 변경분이 사라집니다. 계속할까요?"
         case .ko: return "'\(name)'이(가) 삭제/이동됐습니다. 스티커를 어떻게 할까요? (현재 내용은 보존됩니다)"
-        case .ko: return "sticky:// 핸들러가 등록되지 않았습니다. 스티커 발사가 동작하지 않습니다 — 앱을 다시 설치해 주세요."
-        case .ko: return "sticky:// 핸들러가 이 앱이 아닙니다 (현재: \(name)). 앱을 다시 설치해 주세요."
+        case .ko: return "post-md:// 핸들러가 등록되지 않았습니다. 스티커 발사가 동작하지 않습니다 — 앱을 다시 설치해 주세요."
+        case .ko: return "post-md:// 핸들러가 이 앱이 아닙니다 (현재: \(name)). 앱을 다시 설치해 주세요."
         case .ko: return "마크다운 렌더링: swift-markdown-ui (MIT)\nMarkEdit 동반 도구"
         case .ko: return "스티커 내용이 너무 큽니다 (최대 약 \(maxMB)MB)."
         case .ko: return "스티커가 최대 \(n)장이라 일부 파일을 열지 못했습니다."

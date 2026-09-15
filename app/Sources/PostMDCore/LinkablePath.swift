@@ -1,6 +1,6 @@
 import Foundation
 
-/// Receiver-side guard for a path handed in via `sticky://open?path=`. A URL can be fired by any app or
+/// Receiver-side guard for a path handed in via `post-md://open?path=`. A URL can be fired by any app or
 /// web page, so we only ever open an existing regular file with a markdown/text extension — never a
 /// directory, a missing path, or an arbitrary system file.
 public enum LinkablePath {

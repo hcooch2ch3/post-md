@@ -27,7 +27,7 @@ final class CrossComponentTests: XCTestCase {
 
         for fx in fixtures {
             let url = try XCTUnwrap(
-                URL(string: "sticky://new?content=\(fx.encoded)"),
+                URL(string: "post-md://new?content=\(fx.encoded)"),
                 "URL build failed: \(fx.encoded)")
             let result = StickyURLParser.parse(url)
             XCTAssertEqual(
