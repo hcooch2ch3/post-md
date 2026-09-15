@@ -1,28 +1,28 @@
 [English](README.md) | **한국어**
 
-# StickyCast
+# post-md
 
 MarkEdit에서 선택한 마크다운을 macOS 데스크탑에 **플로팅 스티커**로 띄우는 도구.
 
-![데스크탑에 띄운 StickyCast 스티커](assets/hero.png)
+![데스크탑에 띄운 post-md 스티커](assets/hero.png)
 
 두 컴포넌트로 구성됩니다:
 
-- **발신 측** — **MarkEdit 확장**(`extension/`) 또는 **Obsidian 플러그인**(`obsidian/`) — 이 에디터에서 선택한 마크다운을 `sticky://` URL 스킴을 통해 전송합니다.
-- **컴패니언 앱 StickyCast**(`app/`)는 URL을 받아 데스크탑에 반투명 스티커 창으로 표시합니다(📌로 고정한 것만 항상 위).
+- **발신 측** — **MarkEdit 확장**(`extension/`) 또는 **Obsidian 플러그인**(`obsidian/`) — 이 에디터에서 선택한 마크다운을 `post-md://` URL 스킴을 통해 전송합니다.
+- **컴패니언 앱 post-md**(`app/`)는 URL을 받아 데스크탑에 반투명 스티커 창으로 표시합니다(📌로 고정한 것만 항상 위).
 
-두 컴포넌트는 커스텀 URL 스킴 하나(`sticky://`)로만 느슨하게 연결됩니다. 앱은 어느 에디터가 보냈는지 모르므로, 이 스킴만 말할 줄 알면 어떤 발신 측이든 동작합니다.
+두 컴포넌트는 커스텀 URL 스킴 하나(`post-md://`)로만 느슨하게 연결됩니다. 앱은 어느 에디터가 보냈는지 모르므로, 이 스킴만 말할 줄 알면 어떤 발신 측이든 동작합니다.
 
 ## 요구사항
 
-- **StickyCast 앱**: macOS 14 이상
+- **post-md 앱**: macOS 14 이상
 - **MarkEdit**: [MarkEdit](https://github.com/MarkEdit-app/MarkEdit). Homebrew cask(`brew install --cask markedit`)는 현재 macOS 15 이상을 요구하므로, macOS 14에서는 [GitHub 릴리스](https://github.com/MarkEdit-app/MarkEdit/releases)에서 호환 버전을 직접 설치하세요.
 - **Obsidian 플러그인**(선택): macOS의 Obsidian 1.4 이상.
 - 빌드: Swift 5.9+ (Xcode 또는 CLI 툴체인), Node 18+
 
 ## 설치
 
-> ⚠️ **앱을 먼저 실행하세요.** 컴패니언 앱이 실행되면서 `sticky://` URL 핸들러를 시스템에 등록합니다. 앱이 미설치 상태이면 Extension이 전송한 URL은 조용히 사라집니다.
+> ⚠️ **앱을 먼저 실행하세요.** 컴패니언 앱이 실행되면서 `post-md://` URL 핸들러를 시스템에 등록합니다. 앱이 미설치 상태이면 Extension이 전송한 URL은 조용히 사라집니다.
 
 ### 1. 컴패니언 앱
 
@@ -31,7 +31,7 @@ cd app
 ./make-app.sh      # 빌드 → .app 조립 → Launch Services 등록 → 실행
 ```
 
-`build/StickyCast.app`이 생성되고 실행됩니다. Dock에는 나타나지 않고(LSUIElement) 메뉴바에 `note.text` 아이콘으로 상주합니다.
+`build/post-md.app`이 생성되고 실행됩니다. Dock에는 나타나지 않고(LSUIElement) 메뉴바에 `note.text` 아이콘으로 상주합니다.
 
 ### 2. MarkEdit 확장
 
@@ -55,7 +55,7 @@ npm install
 npm run build
 ```
 
-`manifest.json`(리포 루트)과 `obsidian/main.js`를 `<보관함>/.obsidian/plugins/stickycast/`에 복사한 뒤, 설정 ▸ 커뮤니티 플러그인에서 **StickyCast**를 켜세요. 커뮤니티 스토어 등록은 예정되어 있습니다.
+`manifest.json`(리포 루트)과 `obsidian/main.js`를 `<보관함>/.obsidian/plugins/post-md/`에 복사한 뒤, 설정 ▸ 커뮤니티 플러그인에서 **post-md**를 켜세요. 커뮤니티 스토어 등록은 예정되어 있습니다.
 
 ## 사용
 
@@ -71,13 +71,13 @@ npm run build
 - **핀 안 한 스티커**는 다른 앱으로 작업하면 뒤로 덮여 화면을 가리지 않습니다.
 - **📌로 고정한 스티커**만 항상 맨 위에 떠 있어 작업 중에도 계속 보입니다.
 
-위치, 크기, 투명도, 고정 상태, 색상은 저장되어 앱을 재시작해도 복원됩니다. 메뉴바 아이콘에서는 스티커 목록, **모두 숨기기/보이기**(한 번에 치웠다가 되띄우기, 삭제 아님), 모두 앞으로, 스티커 내보내기, 모두 닫기, 최근 오류, StickyCast에 관하여, 종료도 이용할 수 있습니다.
+위치, 크기, 투명도, 고정 상태, 색상은 저장되어 앱을 재시작해도 복원됩니다. 메뉴바 아이콘에서는 스티커 목록, **모두 숨기기/보이기**(한 번에 치웠다가 되띄우기, 삭제 아님), 모두 앞으로, 스티커 내보내기, 모두 닫기, 최근 오류, post-md에 관하여, 종료도 이용할 수 있습니다.
 
 ## 편집과 Live Sync
 
 - **인라인 편집**: 본문을 더블클릭하거나 **✏️**를 누릅니다. **⌘Return**으로 저장, **Esc**로 취소합니다.
 - `.md` 파일로 연 스티커는 그 파일에 **연결**되며 버튼 두 개가 더 생깁니다.
-  - **⬆️**는 편집 내용을 원본 파일에 다시 씁니다. StickyCast 밖에서 파일이 바뀐 경우 덮어쓰기 전에 확인합니다.
+  - **⬆️**는 편집 내용을 원본 파일에 다시 씁니다. post-md 밖에서 파일이 바뀐 경우 덮어쓰기 전에 확인합니다.
   - **🔗**은 Finder에서 보기, 원본 편집기로 열기, 연결 해제(내용은 남기고 링크만 끊기)를 엽니다.
 - **Live Sync**: 연결된 파일을 아무 편집기에서나 고치면 스티커가 알아서 갱신됩니다. 파일과 스티커가 둘 다 바뀌면 배너에서 **파일 가져오기** 또는 **내 편집 유지**를 고를 수 있습니다. 확인 없이 덮어쓰는 일은 없습니다.
 - **내보내기**: 메뉴바 아이콘 ▸ **스티커 내보내기**로 스티커를 `.md` 파일로 저장합니다.
