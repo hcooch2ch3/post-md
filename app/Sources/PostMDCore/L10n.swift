@@ -6,7 +6,7 @@ public enum Language { case en, ko }
 public enum LanguageOverride: String { case system, en, ko }
 
 public enum L10n {
-    private static let overrideKey = "StickyCastLanguageOverride"
+    private static let overrideKey = "PostMDLanguageOverride"
 
     // Injectable defaults store so tests never touch the real `UserDefaults.standard`
     // domain (would persist a stray key on the developer's machine). Production uses `.standard`.
@@ -56,7 +56,7 @@ public enum L10n {
     public static func bringAllToFront(_ l: Language = current) -> String { switch l { case .en: "Bring all to front"; case .ko: "모두 앞으로" } }
     public static func exportSticker(_ l: Language = current) -> String { switch l { case .en: "Export sticker"; case .ko: "스티커 내보내기" } }
     public static func closeAll(_ l: Language = current) -> String { switch l { case .en: "Close all"; case .ko: "모두 닫기" } }
-    public static func aboutStickyCast(_ l: Language = current) -> String { switch l { case .en: "About StickyCast"; case .ko: "StickyCast에 관하여" } }
+    public static func aboutPostMD(_ l: Language = current) -> String { switch l { case .en: "About post-md"; case .ko: "post-md에 관하여" } }
     public static func aboutCredits(_ l: Language = current) -> String {
         switch l {
         case .en: return "Markdown rendering: swift-markdown-ui (MIT)\nMarkEdit companion tool"

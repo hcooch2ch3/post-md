@@ -6,8 +6,8 @@ final class StickyStoreTests: XCTestCase {
     private let screen = CGRect(x: 0, y: 0, width: 1440, height: 900)
 
     override func setUp() {
-        defaults = UserDefaults(suiteName: "test.stickycast")!
-        defaults.removePersistentDomain(forName: "test.stickycast")
+        defaults = UserDefaults(suiteName: "test.post-md")!
+        defaults.removePersistentDomain(forName: "test.post-md")
     }
 
     func makeStore() -> StickyStore { StickyStore(defaults: defaults, screenFrame: screen) }

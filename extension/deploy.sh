@@ -17,5 +17,5 @@ fi
 npm run build
 
 mkdir -p "$DEST"
-cp dist/sticky-cast.js "$DEST/"
-echo "deployed → $DEST/sticky-cast.js (restart MarkEdit)"
+cp dist/post-md.js "$DEST/"
+echo "deployed → $DEST/post-md.js (restart MarkEdit)"

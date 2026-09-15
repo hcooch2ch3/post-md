@@ -11,9 +11,9 @@ const MAX_MB = Math.round(MAX_CONTENT_BYTES / (1024 * 1024));
 
 // Idempotent registration guard: MarkEdit loads the extension script once per webview context, so the
 // same script can run multiple times (confirmed in a two-stage pre-flight test). A global sentinel blocks duplicate menu registration.
-const g = globalThis as unknown as { __stickyCastRegistered?: boolean };
-if (!g.__stickyCastRegistered) {
-  g.__stickyCastRegistered = true;
+const g = globalThis as unknown as { __postMDRegistered?: boolean };
+if (!g.__postMDRegistered) {
+  g.__postMDRegistered = true;
 
   MarkEdit.addMainMenuItem([{
     title: "Pop as Sticky",

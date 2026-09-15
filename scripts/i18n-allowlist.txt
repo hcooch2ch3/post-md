@@ -67,7 +67,7 @@
     ko: "문서가 비어 있거나 공백뿐입니다. 내용을 입력하거나 일부를 선택한 뒤 다시 시도하세요.",
     ko: "이 문서는 아직 파일로 저장되지 않아 스티커가 파일과 동기화될 수 없습니다. 스냅샷(복사본)으로 띄울까요?",
     ko: `스티커는 약 ${mb}MB까지만 담을 수 있습니다. 원하는 부분만 선택한 뒤 다시 시도하세요.`,
-    public static func aboutStickyCast(_ l: Language = current) -> String { switch l { case .en: "About StickyCast"; case .ko: "StickyCast에 관하여" } }
+    public static func aboutPostMD(_ l: Language = current) -> String { switch l { case .en: "About post-md"; case .ko: "post-md에 관하여" } }
     public static func bothChanged(_ l: Language = current) -> String { switch l { case .en: "Both file and sticker changed"; case .ko: "파일과 스티커가 모두 변경됨" } }
     public static func bringAllToFront(_ l: Language = current) -> String { switch l { case .en: "Bring all to front"; case .ko: "모두 앞으로" } }
     public static func cancel(_ l: Language = current) -> String { switch l { case .en: "Cancel"; case .ko: "취소" } }

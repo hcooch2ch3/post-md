@@ -4,7 +4,7 @@ import PostMDCore
 /// The standard text-editing commands: the Edit menu that carries them, and the dispatch that
 /// actually fires them inside a sticker.
 ///
-/// Why this exists: StickyCast is an `LSUIElement` agent app whose stickers are nonactivating
+/// Why this exists: post-md is an `LSUIElement` agent app whose stickers are nonactivating
 /// panels, so it never had a main menu at all — leaving AppKit nowhere to match ⌘X / ⌘C / ⌘V / ⌘A.
 /// Typing into a sticker worked; cut, copy, paste and select-all did nothing.
 ///
@@ -67,7 +67,7 @@ enum EditMenu {
         // active, so there is nothing here for a user to see. Key equivalents still match without
         // one. The app's own commands live in the status menu, which is the surface people use.
         let appItem = NSMenuItem()
-        appItem.submenu = NSMenu(title: "StickyCast")   // app name, untranslated by convention
+        appItem.submenu = NSMenu(title: "post-md")   // app name, untranslated by convention
         main.addItem(appItem)
 
         let editItem = NSMenuItem()

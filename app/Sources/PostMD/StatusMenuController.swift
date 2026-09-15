@@ -33,7 +33,7 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
 
     private func setIcon(error: Bool) {
         let symbol = error ? "exclamationmark.triangle.fill" : "note.text"
-        statusItem.button?.image = NSImage(systemSymbolName: symbol, accessibilityDescription: "StickyCast")
+        statusItem.button?.image = NSImage(systemSymbolName: symbol, accessibilityDescription: "post-md")
     }
 
     /// fallback: notifications may not show (permission denied, etc.), so on error swap the icon to a badge
@@ -107,7 +107,7 @@ final class StatusMenuController: NSObject, NSMenuDelegate {
         }
         menu.addItem(makeItem(L10n.closeAll(), #selector(closeAll)))
         menu.addItem(.separator())
-        menu.addItem(makeItem(L10n.aboutStickyCast(), #selector(showAbout)))
+        menu.addItem(makeItem(L10n.aboutPostMD(), #selector(showAbout)))
         // Language override submenu (System / English / Korean). Checkmark on the active choice.
         let langItem = NSMenuItem(title: L10n.languageMenu(), action: nil, keyEquivalent: "")
         let langSub = NSMenu()

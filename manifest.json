@@ -1,6 +1,6 @@
 {
-  "id": "stickycast",
-  "name": "StickyCast",
+  "id": "post-md",
+  "name": "post-md",
   "version": "1.0.0",
   "minAppVersion": "1.4.0",
   "description": "Pop selected Markdown onto your macOS desktop as a floating sticky note.",

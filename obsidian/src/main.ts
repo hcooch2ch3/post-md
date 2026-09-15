@@ -16,11 +16,11 @@ function electronShell(): { openExternal(url: string): Promise<void> } | null {
   }
 }
 
-export default class StickyCastPlugin extends Plugin {
+export default class PostMDPlugin extends Plugin {
   onload() {
     // Launch API reachability: warns only when the shell is missing, so a healthy install is silent.
     if (!electronShell()) {
-      console.warn("[stickycast] electron.shell unavailable — Pop as Sticky will not launch here.");
+      console.warn("[post-md] electron.shell unavailable — Pop as Sticky will not launch here.");
     }
 
     // Plain callback (not editorCallback) so the command still works when focus is on the
@@ -84,7 +84,7 @@ export default class StickyCastPlugin extends Plugin {
       // Writing to `file` (the editor's own file, not getActiveFile()) is what prevents a cross-note overwrite.
       await this.app.vault.modify(file, editor.getValue());
     } catch (e) {
-      console.error("[stickycast] flush before link failed", e);
+      console.error("[post-md] flush before link failed", e);
       new Notice("Couldn't save the note before linking — popping a snapshot instead.");
       return null; // fall back to snapshot
     }
@@ -93,14 +93,14 @@ export default class StickyCastPlugin extends Plugin {
 
   private launch(shell: { openExternal(url: string): Promise<void> }, url: string) {
     void shell.openExternal(url).catch((e) => {
-      console.error("[stickycast] openExternal failed", e);
+      console.error("[post-md] openExternal failed", e);
       new Notice("Failed to launch the sticky — see console.");
     });
   }
 
   private async pop(editor: Editor, file: TFile | null) {
     if (process.platform !== "darwin") {
-      new Notice("StickyCast is macOS-only.");
+      new Notice("post-md is macOS-only.");
       return;
     }
     const shell = electronShell();

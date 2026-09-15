@@ -2,7 +2,7 @@ import XCTest
 @testable import PostMDCore
 
 final class L10nTests: XCTestCase {
-    private static let suiteName = "test.stickycast.l10n"
+    private static let suiteName = "test.post-md.l10n"
 
     override func setUp() {
         super.setUp()
@@ -73,7 +73,7 @@ final class L10nTests: XCTestCase {
             L10n.colorYellow, L10n.colorPink, L10n.colorBlue, L10n.colorGreen, L10n.colorPurple,
             L10n.defaultColorLabel, L10n.recentErrorsHeader, L10n.newFromClipboard, L10n.openMarkdownFile,
             L10n.noStickers, L10n.emptyPreview, L10n.hideAll, L10n.showAll, L10n.bringAllToFront,
-            L10n.exportSticker, L10n.closeAll, L10n.aboutStickyCast, L10n.quit,
+            L10n.exportSticker, L10n.closeAll, L10n.aboutPostMD, L10n.quit,
             L10n.languageMenu, L10n.languageSystem,
             L10n.closeSticker, L10n.unpin, L10n.pin, L10n.color, L10n.opacity, L10n.edit,
             L10n.fileLink, L10n.showInFinder, L10n.openInEditor, L10n.detach, L10n.saved,

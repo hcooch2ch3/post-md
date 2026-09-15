@@ -482,14 +482,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func reportError(_ message: String) {
         recentErrors = Array((recentErrors + [message]).suffix(5))
         let content = UNMutableNotificationContent()
-        content.title = "StickyCast"
+        content.title = "post-md"
         content.body = message
         UNUserNotificationCenter.current().add(
             UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         ) { error in
-            if let error { NSLog("StickyCast notification add failed: %@", "\(error)") }  // no silent failures
+            if let error { NSLog("post-md notification add failed: %@", "\(error)") }  // no silent failures
         }
-        NSLog("StickyCast error: %@", message)
+        NSLog("post-md error: %@", message)
         statusMenu?.indicateError()  // fallback: even if the notification isn't visible, flag it via the menu bar icon badge
     }
 

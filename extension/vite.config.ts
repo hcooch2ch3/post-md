@@ -3,8 +3,8 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   build: {
-    lib: { entry: "src/index.ts", formats: ["iife"], name: "StickyCast", fileName: () => "sticky-cast" },
+    lib: { entry: "src/index.ts", formats: ["iife"], name: "PostMD", fileName: () => "post-md" },
     outDir: "dist",
-    rollupOptions: { output: { entryFileNames: "sticky-cast.js" } }
+    rollupOptions: { output: { entryFileNames: "post-md.js" } }
   }
 });

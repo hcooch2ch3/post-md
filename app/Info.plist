@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleIdentifier</key><string>dev.seongmin.post-md</string>
-    <key>CFBundleName</key><string>StickyCast</string>
+    <key>CFBundleName</key><string>post-md</string>
     <key>CFBundleDevelopmentRegion</key><string>en</string>
     <key>CFBundleLocalizations</key>
     <array>
         <string>en</string>
         <string>ko</string>
     </array>
-    <key>CFBundleExecutable</key><string>StickyCast</string>
+    <key>CFBundleExecutable</key><string>PostMD</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>0.1.0</string>
     <key>CFBundleVersion</key><string>1</string>
