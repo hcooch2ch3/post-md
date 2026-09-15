@@ -38,6 +38,7 @@ struct StickyContentView: View {
     @State private var pulseVisible = false      // brief top highlight on clean auto-sync
     @State private var showLinkPopover = false    // 🔗 link info / unlink popover
     @State private var didAutoEdit = false        // blank-create: fire startEditing auto-entry once (onAppear can repeat)
+    @State private var blankDraft = BlankDraftState() // blank-create one-shot (unlike didAutoEdit, which is permanent): armed for the first draft only
 
     init(vm: StickyViewModel, initialOpacity: Double, initialPinned: Bool,
          startEditing: Bool = false,
@@ -77,6 +78,8 @@ struct StickyContentView: View {
 
     private func beginEdit() {
         guard onContentChange != nil else { return }   // editing-disabled sticker
+        showColorPicker = false   // the anchors live in readChrome, which is torn down on the mode switch
+        showLinkPopover = false
         draft = vm.content
         isEditing = true
         vm.setEditing(true)   // makes Live Sync treat this as dirty (prevents clobbering uncommitted edits)
@@ -103,6 +106,7 @@ struct StickyContentView: View {
         vm.content = draft
         isEditing = false
         vm.setEditing(false)
+        blankDraft.commit()   // the first draft was filled in (or deliberately saved empty); never auto-close after this
         // Auto write-back: a linked sticker whose content now differs from the file pushes to the source file,
         // reusing the ⬆️ path (incl. the confirmOverwrite dialog on external change). Skipped when in sync, so a
         // no-op edit doesn't touch the file. onContentChange already persisted `draft` to the store, which is
@@ -118,8 +122,19 @@ struct StickyContentView: View {
         onSaveToNewFile?()
     }
     private func cancelEdit() {
+        guard isEditing else { return }   // Esc can reach here twice (onExitCommand + cancelAction shortcut); act once
         isEditing = false   // discard draft
         vm.setEditing(false)
+        // Blank-create convenience: a sticker that was created blank and abandoned on its very first draft reads as
+        // "never mind", so it closes instead of leaving an empty sticker behind (read mode could still close it with
+        // the X; this just saves that step, the way an empty new note is discarded on dismiss). Saving an empty first
+        // draft with ⌘Return is an explicit keep, so it does persist. The lifecycle is a one-shot: see BlankDraftState.
+        if blankDraft.cancel(draft: draft) {
+            // defer past the current SwiftUI update and the TextEditor's first-responder resignation: closing tears
+            // down the hosting view, and doing that synchronously from inside the Esc dispatch is the classic crash shape.
+            // Safe if the controller is already gone by then: the controller supplies onClose with a weak capture.
+            DispatchQueue.main.async { onClose() }
+        }
     }
 
     // icon/color for the "save to source" button: ⬆️ at rest, ✓ (green) on success, ✗ (red) on failure
@@ -130,17 +145,148 @@ struct StickyContentView: View {
         case nil:      return "arrow.up.doc"
         }
     }
-    // extracted from the top chrome HStack to keep that expression within the SwiftUI type-checker's budget.
-    @ViewBuilder private var saveToNewFileChromeButton: some View {
-        if !vm.isLinked, let onSaveToNewFile, !isEditing {
-            Button(action: onSaveToNewFile) {
-                Image(systemName: "arrow.down.doc").imageScale(.medium).foregroundStyle(.secondary)
+    // MARK: chrome bars (split out of `body` to keep each HStack within the SwiftUI type-checker's budget)
+
+    /// Read-mode header. Left: window controls (close, pin, appearance). Right: file actions, then edit as the primary action.
+    private var readChrome: some View {
+        HStack(spacing: 8) {
+            Button(action: onClose) {
+                Image(systemName: "xmark.circle.fill").imageScale(.medium)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(L10n.saveToNewFile())
-            .help(L10n.saveToNewFile())
+            .accessibilityLabel(L10n.closeSticker())
+            .help(L10n.closeSticker())
+
+            Button(action: { pinned.toggle(); onTogglePin(pinned) }) {
+                Image(systemName: pinned ? "pin.fill" : "pin")
+                    .imageScale(.medium)
+                    .foregroundStyle(pinned ? Color.accentColor : Color.secondary)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(pinned ? L10n.unpin() : L10n.pin())
+            .help(pinned ? L10n.unpin() : L10n.pin())
+
+            appearanceButton
+
+            Spacer(minLength: 4)
+
+            // 🔗 link indicator / popover: file-linked stickers only
+            if vm.isLinked {
+                Button(action: { showLinkPopover.toggle() }) {
+                    Image(systemName: "link").imageScale(.medium).foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.fileLink())
+                .help(L10n.fileLink())
+                .popover(isPresented: $showLinkPopover, arrowEdge: .bottom) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Button(L10n.showInFinder()) { showLinkPopover = false; onRevealInFinder?() }
+                        Button(L10n.openInEditor()) { showLinkPopover = false; onOpenInEditor?() }
+                        Divider()
+                        Button(L10n.detach()) { showLinkPopover = false; onDetach?() }
+                    }
+                    .buttonStyle(.plain)
+                    .padding(10)
+                }
+            }
+            // save to a new file + link: standalone (unlinked) stickers only. Once linked, the ⬆️ button below takes over.
+            if !vm.isLinked, let onSaveToNewFile {
+                Button(action: onSaveToNewFile) {
+                    Image(systemName: "arrow.down.doc").imageScale(.medium).foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.saveToNewFile())
+                .help(L10n.saveToNewFile())
+            }
+            // save to source: file-linked stickers only. Push edits back to the source .md, with visual result feedback.
+            if vm.isLinked, let onSaveToFile {
+                Button(action: { flashSaveResult(onSaveToFile()) }) {
+                    Image(systemName: saveIconName)
+                        .imageScale(.medium)
+                        .foregroundStyle(saveIconColor)
+                        .contentTransition(.symbolEffect(.replace))
+                }
+                .buttonStyle(.plain)
+                .disabled(saveFlash != nil || !vm.diverged)   // greyed when the sticker matches the file (nothing to push)
+                .accessibilityLabel(saveFlash == .success ? L10n.saved() : L10n.saveToSourceFile())
+                .help(L10n.saveToSourceFile())
+            }
+            // edit: editable stickers only (onContentChange != nil). Alternate entry point to double-click. Far right = primary action.
+            if onContentChange != nil {
+                Button(action: beginEdit) {
+                    Image(systemName: "pencil").imageScale(.medium)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.edit())
+                .help(L10n.edit())
+            }
         }
     }
+
+    /// Edit-mode header: replaces the old bottom button bar. Close, pin and appearance are hidden while a draft is open
+    /// so the bar reads as a modal "you're editing" state; the ways out are Cancel (Esc), Save (⌘Return) and, on an
+    /// unlinked sticker, Save to file… (which commits first). This is a presentation choice, not a draft guard:
+    /// "Close all" and Quit still drop an open draft without asking.
+    private var editChrome: some View {
+        HStack(spacing: 8) {
+            // standalone sticker: save the typed content to a new .md and link to it (visible right while typing a fresh sticky)
+            if !vm.isLinked, onSaveToNewFile != nil {
+                Button(L10n.saveToNewFile(), action: commitThenSaveToNewFile)
+            }
+            Spacer(minLength: 4)
+            Button(L10n.cancel(), action: cancelEdit)
+                .keyboardShortcut(.cancelAction)
+            Button(L10n.save()) { commitEdit() }
+                .buttonStyle(.borderedProminent)
+                .keyboardShortcut(.return, modifiers: .command)   // ⌘Enter → save
+        }
+        .controlSize(.small)
+    }
+
+    /// 🎨 appearance: one popover holding the sticky-note color swatches and the opacity slider. The popover prefers to
+    /// open beside the sticker (arrow on its leading edge) rather than over the body, so the live opacity preview stays
+    /// visible while dragging; AppKit may still relocate it when there's no room to the left. Opacity is always offered
+    /// (its callbacks are non-optional); only the swatch row depends on `onColorChange`, which is always supplied today.
+    private var appearanceButton: some View {
+        Button(action: { showColorPicker.toggle() }) {
+            Image(systemName: "paintpalette")
+                .imageScale(.medium)
+                .foregroundStyle(StickyPalette.color(forKey: colorKey) != nil ? .primary : .secondary)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(L10n.colorAndOpacity())
+        .help(L10n.colorAndOpacity())
+        .popover(isPresented: $showColorPicker, arrowEdge: .leading) {
+            VStack(spacing: 10) {
+                if onColorChange != nil {
+                    HStack(spacing: 8) {
+                        colorSwatch(key: nil, color: nil)   // default
+                        ForEach(StickyPalette.allCases) { colorSwatch(key: $0.rawValue, color: $0.color) }
+                    }
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel(L10n.color())
+                    Divider()
+                }
+                opacityControl
+            }
+            .padding(10)
+        }
+    }
+
+    private var opacityControl: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "circle.lefthalf.filled")
+                .imageScale(.small).foregroundStyle(.secondary)
+            Slider(value: $opacity, in: 0.3...1.0) { editing in
+                if !editing { onOpacityCommit(opacity) }
+            }
+            .onChange(of: opacity) { _, v in onOpacityChange(v) }
+            .controlSize(.mini)
+            .frame(width: 120)
+            .accessibilityLabel(L10n.opacity())
+        }
+    }
+
     private var saveIconColor: Color {
         switch saveFlash {
         case .success: return .green
@@ -184,96 +330,16 @@ struct StickyContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // top chrome bar, always visible (darkens on hover). Left: close, pin / center: opacity / right: edit, save
-            HStack(spacing: 8) {
-                Button(action: onClose) {
-                    Image(systemName: "xmark.circle.fill").imageScale(.medium)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(L10n.closeSticker())
-
-                Button(action: { pinned.toggle(); onTogglePin(pinned) }) {
-                    Image(systemName: pinned ? "pin.fill" : "pin")
-                        .imageScale(.medium)
-                        .foregroundStyle(pinned ? Color.accentColor : Color.secondary)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(pinned ? L10n.unpin() : L10n.pin())
-
-                // color: swatch popover (sticky-note presets)
-                if onColorChange != nil {
-                    Button(action: { showColorPicker.toggle() }) {
-                        Image(systemName: "paintpalette")
-                            .imageScale(.medium)
-                            .foregroundStyle(StickyPalette.color(forKey: colorKey) != nil ? .primary : .secondary)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(L10n.color())
-                    .popover(isPresented: $showColorPicker, arrowEdge: .bottom) {
-                        HStack(spacing: 8) {
-                            colorSwatch(key: nil, color: nil)   // default
-                            ForEach(StickyPalette.allCases) { colorSwatch(key: $0.rawValue, color: $0.color) }
-                        }
-                        .padding(10)
-                    }
-                }
-
-                Spacer(minLength: 4)
-                // opacity: before the right-side buttons, fixed narrow (moved from the bottom bar to the top). Width capped so it doesn't dominate.
-                Image(systemName: "circle.lefthalf.filled")
-                    .imageScale(.small).foregroundStyle(.secondary)
-                Slider(value: $opacity, in: 0.3...1.0) { editing in
-                    if !editing { onOpacityCommit(opacity) }
-                }
-                .onChange(of: opacity) { _, v in onOpacityChange(v) }
-                .controlSize(.mini)
-                .frame(width: 70)
-                .accessibilityLabel(L10n.opacity())
-
-                // edit button: editable stickers only (onContentChange != nil). Alternate entry point to double-click
-                if onContentChange != nil, !isEditing {
-                    Button(action: beginEdit) {
-                        Image(systemName: "pencil").imageScale(.medium)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(L10n.edit())
-                }
-                // save to a new file + link: standalone (unlinked) stickers only. Once linked, the ⬆️ button below takes over.
-                saveToNewFileChromeButton
-                // 🔗 link indicator / popover: file-linked stickers only
-                if vm.isLinked, !isEditing {
-                    Button(action: { showLinkPopover.toggle() }) {
-                        Image(systemName: "link").imageScale(.medium).foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(L10n.fileLink())
-                    .popover(isPresented: $showLinkPopover, arrowEdge: .bottom) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Button(L10n.showInFinder()) { showLinkPopover = false; onRevealInFinder?() }
-                            Button(L10n.openInEditor()) { showLinkPopover = false; onOpenInEditor?() }
-                            Divider()
-                            Button(L10n.detach()) { showLinkPopover = false; onDetach?() }
-                        }
-                        .buttonStyle(.plain)
-                        .padding(10)
-                    }
-                }
-                // save to source: file-linked stickers only. Push edits back to the source .md, with visual result feedback.
-                if vm.isLinked, let onSaveToFile, !isEditing {
-                    Button(action: { flashSaveResult(onSaveToFile()) }) {
-                        Image(systemName: saveIconName)
-                            .imageScale(.medium)
-                            .foregroundStyle(saveIconColor)
-                            .contentTransition(.symbolEffect(.replace))
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(saveFlash != nil || !vm.diverged)   // greyed when the sticker matches the file (nothing to push)
-                    .accessibilityLabel(saveFlash == .success ? L10n.saved() : L10n.saveToSourceFile())
-                    .help(L10n.saveToSourceFile())
-                }
+            // top chrome bar, always visible (darkens on hover).
+            // read mode:  [close, pin, appearance] ... [link | save-to-new-file, save-to-source, edit]
+            // edit mode:  [save-to-new-file (unlinked)] ... [cancel, save]   (window controls hidden while a draft is open)
+            Group {
+                if isEditing { editChrome } else { readChrome }
             }
+            .frame(minHeight: 20)   // lifts the icon-only read bar toward the small-button edit bar so the body jump on mode switch is small
             .padding(.horizontal, 8).padding(.vertical, 5)
-            .background(.thinMaterial.opacity(hovering ? 1.0 : 0.55))
+            // dimmed until hovered in read mode; while editing the bar holds the only exits, so keep it fully legible
+            .background(.thinMaterial.opacity(hovering || isEditing ? 1.0 : 0.55))
 
             // conflict banner: shown when both sides changed. Sits above the edit UI (edits kept). Default is to ignore = non-destructive.
             if vm.syncBanner == .conflict {
@@ -300,28 +366,13 @@ struct StickyContentView: View {
 
             // body: read (Markdown) ↔ edit (TextEditor)
             if isEditing {
-                VStack(spacing: 4) {
-                    TextEditor(text: $draft)
-                        .font(.body)
-                        .scrollContentBackground(.hidden)
-                        .padding(6)
-                        .focused($editorFocused)
-                        .onExitCommand(perform: cancelEdit)   // Esc → cancel
-                        .onAppear { focusEditor() }           // grab focus once the field is actually in the tree (reliable on cold-start create)
-                    HStack(spacing: 8) {
-                        // standalone sticker: save the typed content to a new .md and link to it (visible right while typing a fresh sticky)
-                        if !vm.isLinked, onSaveToNewFile != nil {
-                            Button(L10n.saveToNewFile(), action: commitThenSaveToNewFile)
-                        }
-                        Spacer()
-                        Button(L10n.cancel(), action: cancelEdit)
-                            .keyboardShortcut(.cancelAction)
-                        Button(L10n.save()) { commitEdit() }
-                            .keyboardShortcut(.return, modifiers: .command)   // ⌘Enter → save
-                    }
-                    .controlSize(.small)
-                    .padding(.horizontal, 8).padding(.bottom, 6)
-                }
+                TextEditor(text: $draft)
+                    .font(.body)
+                    .scrollContentBackground(.hidden)
+                    .padding(6)
+                    .focused($editorFocused)
+                    .onExitCommand(perform: cancelEdit)   // Esc → cancel
+                    .onAppear { focusEditor() }           // grab focus once the field is actually in the tree (reliable on cold-start create)
             } else {
                 ScrollView {
                     Markdown(vm.content)
@@ -351,6 +402,9 @@ struct StickyContentView: View {
             guard startEditing, !didAutoEdit else { return }
             didAutoEdit = true
             beginEdit()   // isEditing → TextEditor mounts → its .onAppear (focusEditor) grabs focus
+            // arm the one-shot only if editing actually started (an editing-disabled sticker bails in beginEdit) and
+            // only on empty content, so a future startEditing entrypoint with prefilled content can never arm it
+            if isEditing { blankDraft.armForBlankCreate(content: vm.content) }
         }
         .animation(.easeInOut(duration: 0.15), value: hovering)
         .onHover { hovering = $0 }

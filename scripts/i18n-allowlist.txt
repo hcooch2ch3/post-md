@@ -8,6 +8,7 @@
         XCTAssertEqual(ExportNaming.filename(for: "### 제목만"), "제목만.md")
         XCTAssertEqual(ExportNaming.filename(for: "장보기 목록\n- 우유"), "장보기 목록.md")
         XCTAssertEqual(L10n.closeSticker(.ko), "스티커 닫기")
+        XCTAssertEqual(L10n.colorAndOpacity(.ko), "색상과 투명도")
         XCTAssertEqual(StickyURLParser.parse(url), .success(.new(content: "안녕🎉")))
         XCTAssertEqual(StickyURLParser.parse(url), .success(.new(content: "읽기???")))
         XCTAssertEqual(n.content, "레거시")
@@ -77,6 +78,7 @@
     public static func closeAll(_ l: Language = current) -> String { switch l { case .en: "Close all"; case .ko: "모두 닫기" } }
     public static func closeSticker(_ l: Language = current) -> String { switch l { case .en: "Close sticker"; case .ko: "스티커 닫기" } }
     public static func color(_ l: Language = current) -> String { switch l { case .en: "Color"; case .ko: "색상" } }
+    public static func colorAndOpacity(_ l: Language = current) -> String { switch l { case .en: "Color and opacity"; case .ko: "색상과 투명도" } }
     public static func colorBlue(_ l: Language = current)   -> String { switch l { case .en: "Blue";   case .ko: "파랑" } }
     public static func colorGreen(_ l: Language = current)  -> String { switch l { case .en: "Green";  case .ko: "초록" } }
     public static func colorPink(_ l: Language = current)   -> String { switch l { case .en: "Pink";   case .ko: "분홍" } }

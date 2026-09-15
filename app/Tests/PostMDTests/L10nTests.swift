@@ -53,6 +53,8 @@ final class L10nTests: XCTestCase {
     func testStringsResolve() {
         XCTAssertEqual(L10n.closeSticker(.en), "Close sticker")
         XCTAssertEqual(L10n.closeSticker(.ko), "스티커 닫기")
+        XCTAssertEqual(L10n.colorAndOpacity(.en), "Color and opacity")
+        XCTAssertEqual(L10n.colorAndOpacity(.ko), "색상과 투명도")
         XCTAssertTrue(L10n.linkedFileMissingBody("a.md", .en).contains("a.md"))
         XCTAssertTrue(L10n.linkedFileMissingBody("a.md", .ko).contains("a.md"))
     }
@@ -75,7 +77,7 @@ final class L10nTests: XCTestCase {
             L10n.noStickers, L10n.emptyPreview, L10n.hideAll, L10n.showAll, L10n.bringAllToFront,
             L10n.exportSticker, L10n.closeAll, L10n.aboutPostMD, L10n.quit,
             L10n.languageMenu, L10n.languageSystem,
-            L10n.closeSticker, L10n.unpin, L10n.pin, L10n.color, L10n.opacity, L10n.edit,
+            L10n.closeSticker, L10n.unpin, L10n.pin, L10n.color, L10n.opacity, L10n.colorAndOpacity, L10n.edit,
             L10n.fileLink, L10n.showInFinder, L10n.openInEditor, L10n.detach, L10n.saved,
             L10n.saveToSourceFile, L10n.bothChanged, L10n.takeFile, L10n.keepMyEdits,
             L10n.linkedFileTooLarge, L10n.cancel, L10n.save,

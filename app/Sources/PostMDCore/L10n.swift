@@ -77,6 +77,7 @@ public enum L10n {
     public static func pin(_ l: Language = current) -> String { switch l { case .en: "Pin"; case .ko: "핀 고정" } }
     public static func color(_ l: Language = current) -> String { switch l { case .en: "Color"; case .ko: "색상" } }
     public static func opacity(_ l: Language = current) -> String { switch l { case .en: "Opacity"; case .ko: "투명도" } }
+    public static func colorAndOpacity(_ l: Language = current) -> String { switch l { case .en: "Color and opacity"; case .ko: "색상과 투명도" } }
     public static func edit(_ l: Language = current) -> String { switch l { case .en: "Edit"; case .ko: "편집" } }
     public static func fileLink(_ l: Language = current) -> String { switch l { case .en: "File link"; case .ko: "파일 연결" } }
     public static func showInFinder(_ l: Language = current) -> String { switch l { case .en: "Show in Finder"; case .ko: "Finder에서 보기" } }
