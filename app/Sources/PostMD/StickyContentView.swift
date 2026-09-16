@@ -157,14 +157,7 @@ struct StickyContentView: View {
             .accessibilityLabel(L10n.closeSticker())
             .help(L10n.closeSticker())
 
-            Button(action: { pinned.toggle(); onTogglePin(pinned) }) {
-                Image(systemName: pinned ? "pin.fill" : "pin")
-                    .imageScale(.medium)
-                    .foregroundStyle(pinned ? Color.accentColor : Color.secondary)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(pinned ? L10n.unpin() : L10n.pin())
-            .help(pinned ? L10n.unpin() : L10n.pin())
+            pinButton
 
             appearanceButton
 
@@ -223,12 +216,25 @@ struct StickyContentView: View {
         }
     }
 
-    /// Edit-mode header: replaces the old bottom button bar. Close, pin and appearance are hidden while a draft is open
-    /// so the bar reads as a modal "you're editing" state; the ways out are Cancel (Esc), Save (⌘Return) and, on an
-    /// unlinked sticker, Save to file… (which commits first). This is a presentation choice, not a draft guard:
-    /// "Close all" and Quit still drop an open draft without asking.
+    /// 📌 pin: shared by both headers, since deciding "keep this in front while I write" is an edit-time decision too.
+    private var pinButton: some View {
+        Button(action: { pinned.toggle(); onTogglePin(pinned) }) {
+            Image(systemName: pinned ? "pin.fill" : "pin")
+                .imageScale(.medium)
+                .foregroundStyle(pinned ? Color.accentColor : Color.secondary)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(pinned ? L10n.unpin() : L10n.pin())
+        .help(pinned ? L10n.unpin() : L10n.pin())
+    }
+
+    /// Edit-mode header: replaces the old bottom button bar. Close and appearance are hidden while a draft is open so
+    /// the bar reads as a modal "you're editing" state (pin stays: it carries no draft risk and is wanted mid-edit);
+    /// the ways out are Cancel (Esc), Save (⌘Return) and, on an unlinked sticker, Save to file… (which commits first).
+    /// This is a presentation choice, not a draft guard: "Close all" and Quit still drop an open draft without asking.
     private var editChrome: some View {
         HStack(spacing: 8) {
+            pinButton
             // standalone sticker: save the typed content to a new .md and link to it (visible right while typing a fresh sticky)
             if !vm.isLinked, onSaveToNewFile != nil {
                 Button(L10n.saveToNewFile(), action: commitThenSaveToNewFile)
